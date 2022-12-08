@@ -1,30 +1,32 @@
 pipeline {
-  agent { label "jenkins-node" }
+  agent any
 
   triggers {
-    pollSCM('* * * * *')    
+    pollSCM('* * * * *')
   }
 
   stages {
-	  stage('Checkout') {
+    stage('Checkout') {
       steps {
         git branch: 'main', 
-        url: 'https://github.com/Bart-90/CI-CD-test.git' 
+        url: 'https://github.com/Bart-90/CI-CD-test.git'
       }
     }
     stage('Build') {
       steps {
-        sh 'mvn clean package -DskipTest=true'          }
+        sh 'mvn clean package -DskipTest=true'
+      }
     }
     stage('Test') {
       steps {
-        sh 'mvn test'               
+        sh 'mvn test'
       }
     }
     stage('Deploy') {
       steps {
         deploy adapters: [tomcat9(credentialsId: 'adminID', url: 'http://192.168.56.102:8080')], contextPath: null, war: 'target/hello-world.war'
+      }
     }
   }
 }
-}
+
