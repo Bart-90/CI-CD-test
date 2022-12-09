@@ -27,13 +27,13 @@ pipeline {
     stage('Build Docker Image') {
       agent any
       steps {
-        sh 'docker image build -t Bart-90/hello:latest .'
+        sh 'docker image build -t hello:latest .'
       }
     }
     stage('Tag Docker Image') {
       agent any
       steps {
-        sh 'docker image tag Bart-90/hello:$BUILD_NUMBER'
+        sh 'docker image tag hello:latest Bart-90/hello:$BUILD_NUMBER'
       }
     }
     stage('Publish Docker Image') {
@@ -41,7 +41,7 @@ pipeline {
       steps {
         withDockerRegistry(credentialsId: 'docker-hub-token', url: 'https://index.docker.io/v1/') {
           sh 'docker image push Bart-90/hello:$BUILD_NUMBER'
-          sh 'docker image push Bart-90/hello:latest'		
+          sh 'docker image push hello:latest'		
         }
       }
     }
